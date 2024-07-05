@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
@@ -32,6 +34,14 @@ public class ProductController {
         return ApiResponse.<ProductResponse>builder()
                 .result(productService.createProduct(request))
                 .message("Create new product successfully")
+                .build();
+    }
+
+    @GetMapping("/category/{categoryId}")
+    ApiResponse<List<ProductResponse>> getProductsByCategory(@PathVariable Long categoryId) {
+        return ApiResponse.<List<ProductResponse>>builder()
+                .result(productService.getProductsByCategory(categoryId))
+                .message("Fetch products by category successfully")
                 .build();
     }
 }

@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -25,9 +27,10 @@ public class ProductRequest {
     Float price;
 
     String thumbnail;
-
     String description;
+    String authorName;
+    Long quantity;
 
-    @JsonProperty("category_id")
-    Long categoryId;
+    Set<Long> categoryIds;
+
 }

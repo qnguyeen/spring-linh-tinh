@@ -11,10 +11,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
@@ -25,10 +24,26 @@ public class CategoryController {
     CategoryService categoryService;
 
     @PostMapping
-    ApiResponse<Category> createProduct(@RequestBody @Valid CategoryRequest request) {
+    ApiResponse<Category> createCategory(@RequestBody @Valid CategoryRequest request) {
         return ApiResponse.<Category>builder()
                 .result(categoryService.createCategory(request))
                 .message("Create new category successfully")
+                .build();
+    }
+
+    @GetMapping
+    ApiResponse<List<Category>> getAllCategories() {
+        return ApiResponse.<List<Category>>builder()
+                .result(categoryService.getAllCategories())
+                .message("Fetch all categories successfully")
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    ApiResponse<Category> getCategoryById(@PathVariable Long id) {
+        return ApiResponse.<Category>builder()
+                .result(categoryService.getCategoryById(id))
+                .message("Fetch category successfully")
                 .build();
     }
 

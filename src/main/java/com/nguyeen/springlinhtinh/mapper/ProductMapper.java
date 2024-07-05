@@ -8,6 +8,8 @@ import com.nguyeen.springlinhtinh.entity.Product;
 import com.nguyeen.springlinhtinh.entity.Role;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
     Product toProduct(ProductRequest request);

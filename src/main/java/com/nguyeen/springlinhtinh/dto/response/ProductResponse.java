@@ -22,5 +22,6 @@ public class ProductResponse {
     List<ProductImage> productImages = new ArrayList<>();
     List<CommentResponse> comments = new ArrayList<>();
     List<FavoriteResponse> favorites = new ArrayList<>();
-    Long categoryId;
+    Long quantity;
+
 }

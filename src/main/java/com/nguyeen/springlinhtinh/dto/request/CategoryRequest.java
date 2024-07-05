@@ -1,5 +1,6 @@
 package com.nguyeen.springlinhtinh.dto.request;
 
+import com.nguyeen.springlinhtinh.entity.Category;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,4 +12,5 @@ import lombok.experimental.FieldDefaults;
 public class CategoryRequest {
     @NotEmpty(message = "Category's name cannot be empty")
     String name;
+    Long parentId;
 }

@@ -19,8 +19,10 @@ public enum ErrorCode {
     //Product
     PRODUCT_EXISTED(1011, "Product already existed", HttpStatus.BAD_REQUEST),
     //Category
-    CATEGORY_EXISTED(1021, "Category already existed", HttpStatus.BAD_REQUEST)
-    ;
+    CATEGORY_EXISTED(1021, "Category already existed", HttpStatus.BAD_REQUEST),
+    CATEGORY_NOT_FOUND(1022, "Category not found", HttpStatus.BAD_REQUEST)
+
+            ;
     private int code;
     private String message;
     private HttpStatusCode httpStatusCode;

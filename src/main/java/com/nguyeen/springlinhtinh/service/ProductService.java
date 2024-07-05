@@ -19,6 +19,11 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -31,14 +36,20 @@ public class ProductService {
     ProductMapper productMapper;
 
     public ProductResponse createProduct(ProductRequest request) {
-        Category category = categoryRepository
-                .getReferenceById(request.getCategoryId());//tự throw exception
-
         Product product = productMapper.toProduct(request);
-        product.setCategory(category);
+        Set<Category> categories = new HashSet<>();
+
+        for (Long categoryId : request.getCategoryIds()) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+            categories.add(category);
+        }
+
+        product.setCategories(categories);
+
         try {
             product = productRepository.save(product);
-        }catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new AppException(ErrorCode.PRODUCT_EXISTED);
         }
 
@@ -68,6 +79,11 @@ public class ProductService {
         }
         productRepository.save(product);
         return productImageRepository.save(newProductImage);
+    }
+
+    public List<ProductResponse> getProductsByCategory(Long categoryId) {
+        List<Product> products = productRepository.findByCategoryId(categoryId);
+        return products.stream().map(productMapper::toProductResponse).toList();
     }
 
 }

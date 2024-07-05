@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -27,7 +30,22 @@ public class Product extends BaseEntity{
     @Column(name = "description")
     String description;
 
+    @Column(name = "author_name")
+    String author_name;
+
+    @Column(name = "quantity")
+    Long quantity;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "books_categories",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    Set<Category> categories;
+
+
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    Category category;
+    @JoinColumn(name = "brand_id")
+    Brand brand;
 }

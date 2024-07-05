@@ -35,6 +35,4 @@ public class OrderDetail {
     @Column(name = "total_money", nullable = false)
     Float totalMoney;
 
-    @Column(name = "color")
-    String color;
 }
