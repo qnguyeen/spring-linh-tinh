@@ -1,6 +1,5 @@
-package com.nguyeen.springlinhtinh.dto.request;
+package com.nguyeen.springlinhtinh.dto.request.User;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreationRequest {
+public class UserRequest {
     String fullName;
     String phoneNumber = "";
 

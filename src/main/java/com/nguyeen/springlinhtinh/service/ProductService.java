@@ -37,14 +37,13 @@ public class ProductService {
 
     public ProductResponse createProduct(ProductRequest request) {
         Product product = productMapper.toProduct(request);
-        Set<Category> categories = new HashSet<>();
 
+        Set<Category> categories = new HashSet<>();
         for (Long categoryId : request.getCategoryIds()) {
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
             categories.add(category);
         }
-
         product.setCategories(categories);
 
         try {

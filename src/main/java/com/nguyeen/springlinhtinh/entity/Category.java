@@ -1,10 +1,13 @@
 package com.nguyeen.springlinhtinh.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -20,16 +23,19 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column
-    String categoryName;
+    @Column(unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+    String name;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_id")
+    @JsonManagedReference
     Category parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    @JsonBackReference
     Set<Category> children;
 
     @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
     private Set<Product> products;
 }

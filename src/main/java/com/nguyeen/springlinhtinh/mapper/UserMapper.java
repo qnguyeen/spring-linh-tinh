@@ -1,7 +1,7 @@
 package com.nguyeen.springlinhtinh.mapper;
 
-import com.nguyeen.springlinhtinh.dto.request.UserCreationRequest;
-import com.nguyeen.springlinhtinh.dto.request.UserUpdateRequest;
+import com.nguyeen.springlinhtinh.dto.request.User.UserRequest;
+import com.nguyeen.springlinhtinh.dto.request.User.UserUpdateRequest;
 import com.nguyeen.springlinhtinh.dto.response.UserResponse;
 import com.nguyeen.springlinhtinh.entity.User;
 import org.mapstruct.Mapper;
@@ -10,7 +10,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    User toUser(UserCreationRequest request);
+    User toUser(UserRequest request);
 
     UserResponse toUserResponse(User user);
 

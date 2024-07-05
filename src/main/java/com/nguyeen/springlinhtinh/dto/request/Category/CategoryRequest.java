@@ -1,6 +1,5 @@
-package com.nguyeen.springlinhtinh.dto.request;
+package com.nguyeen.springlinhtinh.dto.request.Category;
 
-import com.nguyeen.springlinhtinh.entity.Category;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

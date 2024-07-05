@@ -30,7 +30,6 @@ public class ProductRequest {
     String description;
     String authorName;
     Long quantity;
-
     Set<Long> categoryIds;
 
 }

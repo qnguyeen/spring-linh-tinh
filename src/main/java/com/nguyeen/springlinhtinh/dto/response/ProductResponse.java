@@ -23,5 +23,4 @@ public class ProductResponse {
     List<CommentResponse> comments = new ArrayList<>();
     List<FavoriteResponse> favorites = new ArrayList<>();
     Long quantity;
-
 }
