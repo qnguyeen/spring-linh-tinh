@@ -16,6 +16,8 @@ public enum ErrorCode {
     // 401 k được xử lý bởi Global bởi nó xảy ra trên các tầng filter -> xử lý = secuConfig
     UNAUTHORIZED(1007, "You do not have permission ", HttpStatus.FORBIDDEN), // 403
     DOB_INVALID(1008, "Your date of birth at least {min}", HttpStatus.BAD_REQUEST),
+    //Product
+    PRODUCT_EXISTED(1001, "Product already existed", HttpStatus.BAD_REQUEST)
     ;
     private int code;
     private String message;
