@@ -16,6 +16,7 @@ import com.nguyeen.springlinhtinh.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 
@@ -35,7 +36,11 @@ public class ProductService {
 
         Product product = productMapper.toProduct(request);
         product.setCategory(category);
-        product = productRepository.save(product);
+        try {
+            product = productRepository.save(product);
+        }catch (DataIntegrityViolationException e) {
+            throw new AppException(ErrorCode.PRODUCT_EXISTED);
+        }
 
         return productMapper.toProductResponse(product);
     }
