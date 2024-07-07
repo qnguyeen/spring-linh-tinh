@@ -1,8 +1,6 @@
 package com.nguyeen.springlinhtinh.dto.response.Product;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nguyeen.springlinhtinh.dto.BaseResponse;
-import com.nguyeen.springlinhtinh.entity.Product;
+import com.nguyeen.springlinhtinh.dto.response.Category.CategoryResponse;
 import com.nguyeen.springlinhtinh.entity.ProductImage;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -27,5 +25,5 @@ public class ProductResponse {
     List<CommentResponse> comments = new ArrayList<>();
     List<FavoriteResponse> favorites = new ArrayList<>();
     Long quantity;
-    Set<Long> categoryIds;
+    Set<CategoryResponse> categories;
 }
