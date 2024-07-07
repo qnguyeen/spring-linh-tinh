@@ -8,10 +8,7 @@ import java.util.List;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-
-    List<Category> findByParentIsNull();
-
     List<Category> findByParentId(Long parentId);
 
-    boolean existsByNameAndParent(String categoryName, Category parent);
+    boolean existsByNameAndParentId(String categoryName, Long parentId);
 }

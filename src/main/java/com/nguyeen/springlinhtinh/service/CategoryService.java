@@ -2,10 +2,13 @@ package com.nguyeen.springlinhtinh.service;
 
 import com.nguyeen.springlinhtinh.dto.request.Category.CategoryRequest;
 import com.nguyeen.springlinhtinh.dto.request.Category.CategoryUpdateRequest;
+import com.nguyeen.springlinhtinh.dto.response.Product.ProductResponse;
 import com.nguyeen.springlinhtinh.entity.Category;
+import com.nguyeen.springlinhtinh.entity.Product;
 import com.nguyeen.springlinhtinh.exception.AppException;
 import com.nguyeen.springlinhtinh.exception.ErrorCode;
 import com.nguyeen.springlinhtinh.mapper.CategoryMapper;
+import com.nguyeen.springlinhtinh.mapper.ProductMapper;
 import com.nguyeen.springlinhtinh.repository.CategoryRepository;
 import com.nguyeen.springlinhtinh.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -17,31 +20,39 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CategoryService {
     CategoryRepository categoryRepository;
-    ProductRepository productRepository;
     CategoryMapper categoryMapper;
 
     @Transactional
     public Category createCategory(CategoryRequest request) {
-        Category category = categoryMapper.toCategory(request);
+        boolean exists = categoryRepository.existsByNameAndParentId(request.getName(), request.getParentId());
 
-        if (request.getParentId() != null) {
-            Category parentCategory = categoryRepository.findById(request.getParentId())
-                    .orElseThrow(() -> new RuntimeException("Parent category not found"));
+        if (!exists) {
+            Category category = categoryMapper.toCategory(request);
 
-            category.setParent(parentCategory);
-        }
+            if (request.getParentId() != null) {
+                Category parentCategory = categoryRepository.findById(request.getParentId())
+                        .orElseThrow(() -> new RuntimeException("Parent category not found"));
+
+                category.setParent(parentCategory);
+            }
             return categoryRepository.save(category);
+        }else {
+            throw new RuntimeException("Category with the same name and parent already exists");
+        }
+
     }
 
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
+
 
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id)
@@ -54,16 +65,15 @@ public class CategoryService {
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
         categoryMapper.updateCategory(category, request);
+
         Long parentId = request.getParentId();
         if (parentId != null) {
             Category parent = categoryRepository.findById(parentId)
                     .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
             category.setParent(parent);
         } else {
-            category.setParent(null); // Clear parent if null is passed
+            category.setParent(null);
         }
-        var children = categoryRepository.findByParentId(request.getParentId());
-        category.setChildren(new HashSet<>());
 
         return categoryRepository.save(category);
     }

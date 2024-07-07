@@ -3,7 +3,7 @@ package com.nguyeen.springlinhtinh.controller;
 import com.nguyeen.springlinhtinh.dto.ApiResponse;
 import com.nguyeen.springlinhtinh.dto.request.Category.CategoryRequest;
 import com.nguyeen.springlinhtinh.dto.request.Category.CategoryUpdateRequest;
-import com.nguyeen.springlinhtinh.dto.response.ProductResponse;
+import com.nguyeen.springlinhtinh.dto.response.Product.ProductResponse;
 import com.nguyeen.springlinhtinh.entity.Category;
 import com.nguyeen.springlinhtinh.service.CategoryService;
 import com.nguyeen.springlinhtinh.service.ProductService;

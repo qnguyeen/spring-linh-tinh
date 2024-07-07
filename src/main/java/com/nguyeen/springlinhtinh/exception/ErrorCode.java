@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatusCode;
 
 @Getter
 public enum ErrorCode {
+    //User & Authentication
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized Error", HttpStatus.INTERNAL_SERVER_ERROR), // 500
     INVALID_KEY(1004, "Invalid Key", HttpStatus.BAD_REQUEST),
     USER_EXISTED(1001, "User already existed", HttpStatus.BAD_REQUEST),
@@ -20,9 +21,10 @@ public enum ErrorCode {
     PRODUCT_EXISTED(1011, "Product already existed", HttpStatus.BAD_REQUEST),
     //Category
     CATEGORY_EXISTED(1021, "Category already existed", HttpStatus.BAD_REQUEST),
-    CATEGORY_NOT_FOUND(1022, "Category not found", HttpStatus.BAD_REQUEST)
+    CATEGORY_NOT_FOUND(1022, "Category not found", HttpStatus.BAD_REQUEST),
+    CATEGORY_PARENT_NOT_VALID(1023, "Can't add product to parent categories", HttpStatus.BAD_REQUEST)
 
-            ;
+    ;
     private int code;
     private String message;
     private HttpStatusCode httpStatusCode;

@@ -1,7 +1,7 @@
 package com.nguyeen.springlinhtinh.mapper;
 
-import com.nguyeen.springlinhtinh.dto.request.PermissionRequest;
-import com.nguyeen.springlinhtinh.dto.response.PermissionResponse;
+import com.nguyeen.springlinhtinh.dto.request.User.PermissionRequest;
+import com.nguyeen.springlinhtinh.dto.response.User.PermissionResponse;
 import com.nguyeen.springlinhtinh.entity.Permission;
 import org.mapstruct.Mapper;
 

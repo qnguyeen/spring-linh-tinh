@@ -11,8 +11,8 @@ import lombok.*;
 @Builder
 public class SocialAccount {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
     @Column(name = "provider", nullable = false, length = 20)
     String provider;

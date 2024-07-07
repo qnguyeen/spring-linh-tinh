@@ -12,6 +12,7 @@ import java.util.Set;
 
 
 @Entity
+@Table(name = "categories")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,9 +34,10 @@ public class Category {
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     @JsonBackReference
-    Set<Category> children;
+    Set<Category> childrens;
 
     @ManyToMany(mappedBy = "categories")
     @JsonIgnore
     private Set<Product> products;
+
 }

@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Builder
 public class Token {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
     @Column(name = "token", length = 255)
     String token;

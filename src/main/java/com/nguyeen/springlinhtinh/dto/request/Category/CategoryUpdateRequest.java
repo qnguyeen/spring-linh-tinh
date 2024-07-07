@@ -19,5 +19,7 @@ public class CategoryUpdateRequest {
     @Column(unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
     String name;
     Long parentId;
-    List<String> childrens;
+    //List<Long> childrenIds;
+
+    //khi create thì không cần create childrens, nhưng khi update phải chuyển hết childrens qua
 }

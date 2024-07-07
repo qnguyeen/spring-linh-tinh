@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByUserIdAndProductId(@Param("userId") Long userId,
+    List<Comment> findByUserIdAndProductId(@Param("userId") String userId,
                                            @Param("productId") Long productId);
     List<Comment> findByProductId(@Param("productId") Long productId);
 }
