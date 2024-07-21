@@ -24,7 +24,7 @@ public class OrderResponse {
     String note;
 
     @JsonProperty("order_date")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    @JsonFormat(pattern = "dd-MM-yyyy 'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     LocalDateTime orderDate;
 
     String status;
@@ -33,7 +33,7 @@ public class OrderResponse {
     String shippingAddress = "";
 
     @JsonProperty("shipping_date")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC")
+    @JsonFormat(pattern = "dd-MM-yyyy", timezone = "UTC")
     LocalDate shippingDate;
 
     String paymentMethod = "";

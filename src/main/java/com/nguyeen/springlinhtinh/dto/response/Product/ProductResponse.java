@@ -1,10 +1,12 @@
 package com.nguyeen.springlinhtinh.dto.response.Product;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nguyeen.springlinhtinh.dto.response.Category.CategoryResponse;
 import com.nguyeen.springlinhtinh.entity.ProductImage;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -26,4 +28,10 @@ public class ProductResponse {
     List<FavoriteResponse> favorites = new ArrayList<>();
     Long quantity;
     Set<CategoryResponse> categories;
+
+    @JsonFormat(pattern = "dd-MM-yyyy 'T 'HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    LocalDateTime createdAt;
+
+    @JsonFormat(pattern = "dd-MM-yyyy 'T 'HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    LocalDateTime updatedAt;
 }

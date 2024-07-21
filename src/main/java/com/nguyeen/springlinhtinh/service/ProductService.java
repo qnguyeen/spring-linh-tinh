@@ -1,6 +1,5 @@
 package com.nguyeen.springlinhtinh.service;
 
-import com.nguyeen.springlinhtinh.dto.request.Category.CategoryUpdateRequest;
 import com.nguyeen.springlinhtinh.dto.request.Product.ProductImageRequest;
 import com.nguyeen.springlinhtinh.dto.request.Product.ProductRequest;
 import com.nguyeen.springlinhtinh.dto.response.Product.ProductResponse;
@@ -17,7 +16,6 @@ import com.nguyeen.springlinhtinh.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.mapstruct.MappingTarget;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 
@@ -99,11 +96,16 @@ public class ProductService {
     public List<ProductResponse> getProductsByCategory(Long categoryId) {
 
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+                .map(category1 -> category1.getParent().getParent())
+                .filter(category1 -> category1 != null)//neu = null thi throw exception
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_PARENT_NOT_VALID));
 
-        if (category.getParent() == null || category.getParent().getParent() == null) {
-            throw new AppException(ErrorCode.CATEGORY_PARENT_NOT_VALID);
-        }
+//        Category category = categoryRepository.findById(categoryId)
+//                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+//
+//        if (category.getParent() == null || category.getParent().getParent() == null) {
+//            throw new AppException(ErrorCode.CATEGORY_PARENT_NOT_VALID);
+//        }
 
         List<Product> products = productRepository.findByCategoryId(categoryId);
         return products.stream().map(productMapper::toProductResponse).toList();

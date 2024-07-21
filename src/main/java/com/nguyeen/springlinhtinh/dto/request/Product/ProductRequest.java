@@ -15,8 +15,6 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductRequest {
     @NotBlank(message = "Title is required")
@@ -32,5 +30,4 @@ public class ProductRequest {
     String authorName;
     Long quantity;
     Set<Long> categoryIds;
-    private List<MultipartFile> files;
 }

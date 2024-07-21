@@ -5,9 +5,10 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Data
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryRequest {
     @NotEmpty(message = "Category's name cannot be empty")

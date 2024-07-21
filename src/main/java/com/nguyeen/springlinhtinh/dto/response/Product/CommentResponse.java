@@ -1,9 +1,11 @@
 package com.nguyeen.springlinhtinh.dto.response.Product;
 
-import com.nguyeen.springlinhtinh.dto.BaseResponse;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nguyeen.springlinhtinh.dto.response.User.UserResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -15,4 +17,10 @@ public class CommentResponse {
     String content;
     UserResponse user;
     Long productId;
+
+    @JsonFormat(pattern = "dd-MM-yyyy 'T 'HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    LocalDateTime createdAt;
+
+    @JsonFormat(pattern = "dd-MM-yyyy 'T 'HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    LocalDateTime updatedAt;
 }

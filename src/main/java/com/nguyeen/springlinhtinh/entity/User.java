@@ -1,11 +1,24 @@
 package com.nguyeen.springlinhtinh.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.nguyeen.springlinhtinh.enums.Gender;
+import com.nguyeen.springlinhtinh.enums.UserStatus;
+import com.nguyeen.springlinhtinh.validator.DobValidator.DobConstraint;
+import com.nguyeen.springlinhtinh.validator.EnumValidator.EnumPatternConstraint;
+import com.nguyeen.springlinhtinh.validator.GenderValidator.GenderConstraint;
+import com.nguyeen.springlinhtinh.validator.PhoneValidator.PhoneConstraint;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.Set;
+
+import static com.nguyeen.springlinhtinh.enums.Gender.*;
 
 @Entity
 @Getter
@@ -28,6 +41,10 @@ public class User extends BaseEntity {
     @Column(name = "phone_number", nullable = true)
     String phoneNumber;
 
+    @GenderConstraint(anyOf = {MALE, FEMALE, OTHER})
+    @Column(name = "gender", nullable = true)
+    Gender gender;
+
     @Column(name = "email", nullable = true)
     String email;
 
@@ -37,11 +54,13 @@ public class User extends BaseEntity {
     @Column(name = "profile_image", length = 255)
     String profileImage;
 
+    @NonNull
     @Column(name = "password", nullable = false)
     String password;
 
-    @Column(name = "is_active")
-    boolean active;
+    @Column(name = "status")
+    @EnumPatternConstraint(name = "status", regexp = "ACTIVE|INACTIVE|NONE")
+    UserStatus status;
 
     @Column(name = "date_of_birth")
     Date dateOfBirth;

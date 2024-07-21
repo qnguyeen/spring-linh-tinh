@@ -1,26 +1,18 @@
 package com.nguyeen.springlinhtinh.service;
 
 import com.nguyeen.springlinhtinh.dto.request.Category.CategoryRequest;
-import com.nguyeen.springlinhtinh.dto.request.Category.CategoryUpdateRequest;
-import com.nguyeen.springlinhtinh.dto.response.Product.ProductResponse;
 import com.nguyeen.springlinhtinh.entity.Category;
-import com.nguyeen.springlinhtinh.entity.Product;
 import com.nguyeen.springlinhtinh.exception.AppException;
 import com.nguyeen.springlinhtinh.exception.ErrorCode;
 import com.nguyeen.springlinhtinh.mapper.CategoryMapper;
-import com.nguyeen.springlinhtinh.mapper.ProductMapper;
 import com.nguyeen.springlinhtinh.repository.CategoryRepository;
-import com.nguyeen.springlinhtinh.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +52,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public Category updateCategory(Long categoryId, CategoryUpdateRequest request) {
+    public Category updateCategory(Long categoryId, CategoryRequest request) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
 
