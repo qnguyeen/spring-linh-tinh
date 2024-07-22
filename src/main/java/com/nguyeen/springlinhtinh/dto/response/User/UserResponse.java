@@ -11,6 +11,8 @@ import java.util.Date;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
+    // cái DTO response này có mục đích trả về thông tin lấy từ bảng User nhưng có vài field không muốn
+    //trả về như password, thông tin cá nhân, ...
     String id;
     String fullName;
     String userName;

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatusCode;
 
 @Getter
 public enum ErrorCode {
+    //Chứa các lỗi được định nghĩa sẵn để sử dụng trong GlobalExceptionHandler
     //User & Authentication
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized Error", HttpStatus.INTERNAL_SERVER_ERROR), // 500
     INVALID_KEY(1004, "Invalid Key", HttpStatus.BAD_REQUEST),

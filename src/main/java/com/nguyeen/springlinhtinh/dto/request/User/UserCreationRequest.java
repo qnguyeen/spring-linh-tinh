@@ -24,6 +24,9 @@ import static com.nguyeen.springlinhtinh.enums.Gender.*;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
+    //các field ở đây tương ứng với thông tin cần nhập vào khi tạo mới một user
+    //các thông tin này cần phải giống với Entity User trong db để mapping dữ liệu
+    //có thể copy Entity User và đổi tên lại để tạo DTO cho nhanh (UserCreationRequest)
     String fullName;
 
     @PhoneConstraint(message = "Phone number invalid format")

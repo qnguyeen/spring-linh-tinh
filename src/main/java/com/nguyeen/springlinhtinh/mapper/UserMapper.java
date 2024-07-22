@@ -10,8 +10,15 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+    //Mapper là một interface, nó giúp chuyển đổi dữ liệu từ DTO sang Entity và ngược lại
+    //tự động kiểm tra các field cùng tên với nhau để chuyển dữ liệu qua
+    //mục đích làm gọn code và dễ chỉnh sửa sau này nếu muốn thêm sửa field mới
+
+    //Map từ DTO request sang Entity User
+    //dùng ở phần service
     User toUser(UserCreationRequest request);
 
+    //Map từ Entity User sang DTO response
     UserResponse toUserResponse(User user);
 
     @Mapping(target = "roles", ignore = true)

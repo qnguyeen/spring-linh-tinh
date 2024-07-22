@@ -15,6 +15,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +39,13 @@ public class  UserService {
     public UserResponse createUser(UserCreationRequest request) {
         //if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
         //đã có exception khác xử lý lỗi này nếu unique != true ở Entity User
+
+        //map dữ liệu mà client nhập vào từ DTO request thành Entity User
         User user = userMapper.toUser(request);
+
+        //nếu không dùng mapper sẽ phải ngồi truyền từng field một như dưỡi
+//        User user = new User();
+//        user.setFullName(request.getFullName());//set tên trong User = tên trong UserCreationRequest
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
@@ -45,15 +54,18 @@ public class  UserService {
         roleRepository.findById(PredefinedRole.USER_ROLE).ifPresent(roles::add);
 
         try {
+            //dùng repository lưu dữ liệu vào trong db
             user = userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
+        //map từ Entity User sang DTO response để trả về cho client trên Controller
         return userMapper.toUserResponse(user);
     }
 
     public UserResponse getMyInfo() {
+        //SecurityContextHolder lưu trữ thông tin bảo mật của phiên làm việc hiện tại (username,pw,...)
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
 
@@ -78,8 +90,11 @@ public class  UserService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserResponse> getUsers() {
-        return userRepository.findAll().stream() // stream : chuyển list thành 1 luồng các đối tượng user
+    public List<UserResponse> getUsers(int pageNo, int pageSize) {
+        int p = 0;
+        if(pageNo > 0) p = pageNo - 1;
+        Pageable pageable = PageRequest.of(p, pageSize, Sort.by(Sort.Direction.DESC,"username"));
+        return userRepository.findAll(pageable).stream() // stream : chuyển list thành 1 luồng các đối tượng user
                 .map(userMapper::toUserResponse)
                 .toList();
     }
