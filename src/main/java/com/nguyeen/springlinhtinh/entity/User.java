@@ -15,6 +15,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -27,13 +28,13 @@ import static com.nguyeen.springlinhtinh.enums.Gender.*;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User extends BaseEntity {
+public class User extends BaseEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @Column(name = "fullname",columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
-    String fullName;
 
     @Column(name = "username", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
     String username;
@@ -48,8 +49,8 @@ public class User extends BaseEntity {
     @Column(name = "email", nullable = true)
     String email;
 
-    @Column(name = "address", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
-    String address;
+    @Embedded
+    private Address address;
 
     @Column(name = "profile_image", length = 255)
     String profileImage;

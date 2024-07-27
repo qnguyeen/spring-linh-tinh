@@ -1,6 +1,8 @@
 package com.nguyeen.springlinhtinh.dto.request.User;
 
+import com.nguyeen.springlinhtinh.entity.Address;
 import com.nguyeen.springlinhtinh.validator.EnumValidator.EnumValueConstraint;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,14 +19,15 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-    String fullName;
-    String phoneNumber = "";
+    String firstName;
+
+    String lastName;    String phoneNumber = "";
 
     @NotBlank(message = "Email không được để trống")
     @Email(message = "EMAIL_INVALID")
     private String email = "";
 
-    String address = "";
+    Address address;
 
     @Size(min = 8, max = 100, message = "PASSWORD_INVALID")
     @NotBlank(message = "Password cannot be blank")

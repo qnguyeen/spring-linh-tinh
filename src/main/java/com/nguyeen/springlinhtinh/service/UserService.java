@@ -3,6 +3,7 @@ package com.nguyeen.springlinhtinh.service;
 import com.nguyeen.springlinhtinh.constant.PredefinedRole;
 import com.nguyeen.springlinhtinh.dto.request.User.UserCreationRequest;
 import com.nguyeen.springlinhtinh.dto.request.User.UserUpdateRequest;
+import com.nguyeen.springlinhtinh.dto.PageResponse;
 import com.nguyeen.springlinhtinh.dto.response.User.UserResponse;
 import com.nguyeen.springlinhtinh.entity.Role;
 import com.nguyeen.springlinhtinh.entity.User;
@@ -10,11 +11,13 @@ import com.nguyeen.springlinhtinh.exception.AppException;
 import com.nguyeen.springlinhtinh.exception.ErrorCode;
 import com.nguyeen.springlinhtinh.mapper.UserMapper;
 import com.nguyeen.springlinhtinh.repository.RoleRepository;
+import com.nguyeen.springlinhtinh.repository.SearchRepository;
 import com.nguyeen.springlinhtinh.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,9 +25,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.nguyeen.springlinhtinh.constant.AppConst.SORT_BY;
 
 @Service
 @RequiredArgsConstructor // tạo constructor cho các biến được define = final
@@ -35,17 +44,13 @@ public class  UserService {
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
     RoleRepository roleRepository;
+    SearchRepository searchRepository;
 
     public UserResponse createUser(UserCreationRequest request) {
         //if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
         //đã có exception khác xử lý lỗi này nếu unique != true ở Entity User
 
-        //map dữ liệu mà client nhập vào từ DTO request thành Entity User
         User user = userMapper.toUser(request);
-
-        //nếu không dùng mapper sẽ phải ngồi truyền từng field một như dưỡi
-//        User user = new User();
-//        user.setFullName(request.getFullName());//set tên trong User = tên trong UserCreationRequest
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
@@ -54,13 +59,10 @@ public class  UserService {
         roleRepository.findById(PredefinedRole.USER_ROLE).ifPresent(roles::add);
 
         try {
-            //dùng repository lưu dữ liệu vào trong db
             user = userRepository.save(user);
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-
-        //map từ Entity User sang DTO response để trả về cho client trên Controller
         return userMapper.toUserResponse(user);
     }
 
@@ -90,13 +92,99 @@ public class  UserService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserResponse> getUsers(int pageNo, int pageSize) {
+    public PageResponse<UserResponse> getUsers(int pageNo, int pageSize) {
         int p = 0;
-        if(pageNo > 0) p = pageNo - 1;
-        Pageable pageable = PageRequest.of(p, pageSize, Sort.by(Sort.Direction.DESC,"username"));
-        return userRepository.findAll(pageable).stream() // stream : chuyển list thành 1 luồng các đối tượng user
-                .map(userMapper::toUserResponse)
-                .toList();
+        if (pageNo > 0) {
+            p = pageNo - 1;
+        }
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<User> users = userRepository.findAll(pageable);
+
+        return PageResponse.<UserResponse>builder()
+                .page(pageNo)
+                .size(pageSize)
+                .total(users.getTotalPages())
+                .items(users.stream().map(userMapper::toUserResponse).toList())
+                .build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public PageResponse<UserResponse> getUsersWithSortBy(int pageNo, int pageSize, String sortBy) {
+        int p = 0;
+        if (pageNo > 0) {
+            p = pageNo - 1;
+        }
+
+        List<Sort.Order> sorts = new ArrayList<>();
+
+        if (StringUtils.hasLength(sortBy)) {
+            Pattern pattern = Pattern.compile(SORT_BY);//(\\w+?)(:)(.*)
+            Matcher matcher = pattern.matcher(sortBy);
+            if (matcher.find()) {
+                if (matcher.group(3).equalsIgnoreCase("asc")) {
+                    sorts.add(new Sort.Order(Sort.Direction.ASC, matcher.group(1)));
+                }
+                if(matcher.group(3).equalsIgnoreCase("desc")){
+                    sorts.add(new Sort.Order(Sort.Direction.DESC, matcher.group(1)));
+                }
+            }
+        }
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sorts));
+        Page<User> users = userRepository.findAll(pageable);
+
+        return PageResponse.<UserResponse>builder()
+                .page(pageNo)
+                .size(pageSize)
+                .total(users.getTotalPages())
+                .items(users.stream().map(userMapper::toUserResponse).toList())
+                .build();
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public PageResponse<UserResponse> getUsersWithSorts(int pageNo, int pageSize, String... sorts) {
+        int p = 0;
+        if (pageNo > 0) {
+            p = pageNo - 1;
+        }
+
+        List<Sort.Order> orders = new ArrayList<>();
+
+        if (sorts != null) {
+            for (String sortBy : sorts) {
+                Pattern pattern = Pattern.compile("(\\w+?)(:)(.*)");
+                Matcher matcher = pattern.matcher(sortBy);
+                if (matcher.find()) {
+                    if (matcher.group(3).equalsIgnoreCase("asc")) {
+                        orders.add(new Sort.Order(Sort.Direction.ASC, matcher.group(1)));
+                    } else {
+                        orders.add(new Sort.Order(Sort.Direction.DESC, matcher.group(1)));
+                    }
+                }
+            }
+        }
+
+        Pageable pageable = PageRequest.of(p, pageSize, Sort.by(orders));
+
+        Page<User> users = userRepository.findAll(pageable);
+        return PageResponse.<UserResponse>builder()
+                .page(pageNo)
+                .size(pageSize)
+                .total(users.getTotalPages())
+                .items(users.stream().map(userMapper::toUserResponse).toList())
+                .build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public PageResponse<UserResponse> getUsersWithSortByColumnAndSearch(int pageNo, int pageSize, String search, String sortBy) {
+        Page<User> users = searchRepository.getUsersWithSortByColumnAndSearch(pageNo, pageSize, sortBy, search);
+        return PageResponse.<UserResponse>builder()
+                .page(users.getNumber())
+                .size(users.getSize())
+                .total(users.getTotalElements())
+                .items(users.stream().map(userMapper::toUserResponse).toList())
+                .build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")

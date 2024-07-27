@@ -1,11 +1,13 @@
 package com.nguyeen.springlinhtinh.dto.request.User;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.nguyeen.springlinhtinh.entity.Address;
 import com.nguyeen.springlinhtinh.enums.Gender;
 import com.nguyeen.springlinhtinh.validator.DobValidator.DobConstraint;
 import com.nguyeen.springlinhtinh.validator.GenderValidator.GenderConstraint;
 import com.nguyeen.springlinhtinh.validator.PhoneValidator.PhoneConstraint;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,10 +26,9 @@ import static com.nguyeen.springlinhtinh.enums.Gender.*;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
-    //các field ở đây tương ứng với thông tin cần nhập vào khi tạo mới một user
-    //các thông tin này cần phải giống với Entity User trong db để mapping dữ liệu
-    //có thể copy Entity User và đổi tên lại để tạo DTO cho nhanh (UserCreationRequest)
-    String fullName;
+    String firstName;
+
+    String lastName;
 
     @PhoneConstraint(message = "Phone number invalid format")
     String phoneNumber = "";
@@ -39,7 +40,8 @@ public class UserCreationRequest {
     @Size(min = 2, max = 50, message = "USERNAME_INVALID")
     String username;
 
-    String address = "";
+    @Embedded
+    Address address;
 
     @Size(min = 8, max = 100, message = "PASSWORD_INVALID")
     @NotBlank(message = "Password cannot be blank")
