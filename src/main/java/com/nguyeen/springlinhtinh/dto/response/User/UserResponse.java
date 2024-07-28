@@ -1,12 +1,16 @@
 package com.nguyeen.springlinhtinh.dto.response.User;
 
 import com.nguyeen.springlinhtinh.entity.Address;
+import com.nguyeen.springlinhtinh.enums.Gender;
+import com.nguyeen.springlinhtinh.enums.UserStatus;
+import com.nguyeen.springlinhtinh.validator.EnumValidator.EnumPatternConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @Builder
@@ -19,11 +23,11 @@ public class UserResponse {
     String lastName;
     String username;
     String phoneNumber;
-
-    @Embedded
-    Address address;
-
+    String email;
+    Gender gender;
+    Set<Address> addresses;
     String profileImage;
+    UserStatus status;
     boolean active;
     Date dateOfBirth;
     int facebookAccountId;

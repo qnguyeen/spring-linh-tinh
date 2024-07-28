@@ -2,13 +2,15 @@ package com.nguyeen.springlinhtinh.mapper;
 
 import com.nguyeen.springlinhtinh.dto.request.User.UserCreationRequest;
 import com.nguyeen.springlinhtinh.dto.request.User.UserUpdateRequest;
+import com.nguyeen.springlinhtinh.dto.response.Category.CategoryResponse;
 import com.nguyeen.springlinhtinh.dto.response.User.UserResponse;
 import com.nguyeen.springlinhtinh.entity.Address;
+import com.nguyeen.springlinhtinh.entity.Category;
 import com.nguyeen.springlinhtinh.entity.User;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -19,4 +21,8 @@ public interface UserMapper {
     @Mapping(target = "roles", ignore = true)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
 
+//    @Named("mapAddresses")
+//    default Set<Address> mapAddresses(Set<Address> addresses) {
+//        return addresses;
+//    }
 }

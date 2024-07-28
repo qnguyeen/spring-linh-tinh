@@ -53,12 +53,24 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/searchs")
+    ApiResponse<PageResponse<UserResponse>> advancedSearchByCriteria(@RequestParam(defaultValue = "0",required = false) int page,
+                                                                              @Min(2)@RequestParam(defaultValue = "3",required = false) int size,
+                                                                              @RequestParam(required = false) String sortBy,
+                                                                              @RequestParam(required = false) String address,
+                                                                              @RequestParam(required = false) String... search//=String[] search
+    ){
+        return ApiResponse.<PageResponse<UserResponse>>builder()
+                .result(userService.advancedSearchByCriteria(page, size,sortBy, address,search))
+                .build();
+    }
+
     @GetMapping("/sorts")
     ApiResponse<PageResponse<UserResponse>> getUsersWithSortsBy(@RequestParam(defaultValue = "0",required = false) int page,
                                                                 @Min(2)@RequestParam(defaultValue = "3",required = false) int size,
                                                                 @RequestParam(required = false) String... sorts){
         return ApiResponse.<PageResponse<UserResponse>>builder()
-                .result(userService.getUsersWithSorts(page, size, sorts))
+                .result(userService.getUsersWithSortsByMultipleColumn(page, size, sorts))
                 .build();
     }
 

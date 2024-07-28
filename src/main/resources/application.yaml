@@ -10,6 +10,13 @@ spring:
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
     password: root
+    hikari:
+      maximum-pool-size: 20 #connection đang làm việc
+      minimum-idle: 10 #connection nhàn rỗi, dự bị
+      connection-timeout: 30000 #30s
+      idle-timeout: 600000 #10p
+      max-lifetime: 1800000 #tồn tại 30p khi k làm việc
+      pool-name: hikari-connection-pool
   jpa:
     hibernate:
       ddl-auto: update

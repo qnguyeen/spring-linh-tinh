@@ -11,16 +11,13 @@ import com.nguyeen.springlinhtinh.exception.AppException;
 import com.nguyeen.springlinhtinh.exception.ErrorCode;
 import com.nguyeen.springlinhtinh.mapper.UserMapper;
 import com.nguyeen.springlinhtinh.repository.RoleRepository;
-import com.nguyeen.springlinhtinh.repository.SearchRepository;
+import com.nguyeen.springlinhtinh.repository.SearchRepository.SearchRepository;
 import com.nguyeen.springlinhtinh.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,6 +54,12 @@ public class  UserService {
         // khi tạo 1 user mới, set thêm role mặc định cho user đó
         HashSet<Role> roles = new HashSet<>();
         roleRepository.findById(PredefinedRole.USER_ROLE).ifPresent(roles::add);
+
+        final User finalUser = user;
+
+        if (finalUser.getAddresses() != null) {
+            finalUser.getAddresses().forEach(address -> address.setUser(finalUser));
+        }
 
         try {
             user = userRepository.save(user);
@@ -143,7 +146,7 @@ public class  UserService {
 
 
     @PreAuthorize("hasRole('ADMIN')")
-    public PageResponse<UserResponse> getUsersWithSorts(int pageNo, int pageSize, String... sorts) {
+    public PageResponse<UserResponse> getUsersWithSortsByMultipleColumn(int pageNo, int pageSize, String... sorts) {
         int p = 0;
         if (pageNo > 0) {
             p = pageNo - 1;
@@ -153,6 +156,7 @@ public class  UserService {
 
         if (sorts != null) {
             for (String sortBy : sorts) {
+                //firstName:asc,lastName:desc
                 Pattern pattern = Pattern.compile("(\\w+?)(:)(.*)");
                 Matcher matcher = pattern.matcher(sortBy);
                 if (matcher.find()) {
@@ -182,7 +186,18 @@ public class  UserService {
         return PageResponse.<UserResponse>builder()
                 .page(users.getNumber())
                 .size(users.getSize())
-                .total(users.getTotalElements())
+                .total(users.getTotalPages())
+                .items(users.stream().map(userMapper::toUserResponse).toList())
+                .build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public PageResponse<UserResponse> advancedSearchByCriteria(int pageNo, int pageSize, String sortBy,String address, String... search) {
+        Page<User> users = searchRepository.advancedSearchUser(pageNo, pageSize, sortBy, address, search);
+        return PageResponse.<UserResponse>builder()
+                .page(users.getNumber())
+                .size(users.getSize())
+                .total(users.getTotalPages())
                 .items(users.stream().map(userMapper::toUserResponse).toList())
                 .build();
     }

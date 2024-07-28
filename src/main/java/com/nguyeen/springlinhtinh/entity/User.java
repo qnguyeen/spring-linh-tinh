@@ -1,6 +1,7 @@
 package com.nguyeen.springlinhtinh.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nguyeen.springlinhtinh.enums.Gender;
 import com.nguyeen.springlinhtinh.enums.UserStatus;
 import com.nguyeen.springlinhtinh.validator.DobValidator.DobConstraint;
@@ -17,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.nguyeen.springlinhtinh.enums.Gender.*;
@@ -35,6 +37,11 @@ public class User extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
+    @Column(name = "firstname", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+    String firstName;
+
+    @Column(name = "lastname", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+    String lastName;
 
     @Column(name = "username", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
     String username;
@@ -49,8 +56,9 @@ public class User extends BaseEntity implements Serializable {
     @Column(name = "email", nullable = true)
     String email;
 
-    @Embedded
-    private Address address;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    Set<Address> addresses = new HashSet<>();
+
 
     @Column(name = "profile_image", length = 255)
     String profileImage;

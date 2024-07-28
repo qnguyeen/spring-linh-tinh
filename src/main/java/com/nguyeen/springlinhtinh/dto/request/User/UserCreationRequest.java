@@ -3,7 +3,9 @@ package com.nguyeen.springlinhtinh.dto.request.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nguyeen.springlinhtinh.entity.Address;
 import com.nguyeen.springlinhtinh.enums.Gender;
+import com.nguyeen.springlinhtinh.enums.UserStatus;
 import com.nguyeen.springlinhtinh.validator.DobValidator.DobConstraint;
+import com.nguyeen.springlinhtinh.validator.EnumValidator.EnumPatternConstraint;
 import com.nguyeen.springlinhtinh.validator.GenderValidator.GenderConstraint;
 import com.nguyeen.springlinhtinh.validator.PhoneValidator.PhoneConstraint;
 import jakarta.persistence.Column;
@@ -17,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.Set;
 
 import static com.nguyeen.springlinhtinh.enums.Gender.*;
 
@@ -26,6 +29,7 @@ import static com.nguyeen.springlinhtinh.enums.Gender.*;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
+
     String firstName;
 
     String lastName;
@@ -40,12 +44,15 @@ public class UserCreationRequest {
     @Size(min = 2, max = 50, message = "USERNAME_INVALID")
     String username;
 
-    @Embedded
-    Address address;
+    Set<Address> addresses;
 
     @Size(min = 8, max = 100, message = "PASSWORD_INVALID")
     @NotBlank(message = "Password cannot be blank")
     String password = "";
+
+    @Column(name = "status")
+    @EnumPatternConstraint(name = "status", regexp = "ACTIVE|INACTIVE|NONE")
+    UserStatus status;
 
     @NotBlank(message = "Retype password cannot be blank")
     String retypePassword = "";
