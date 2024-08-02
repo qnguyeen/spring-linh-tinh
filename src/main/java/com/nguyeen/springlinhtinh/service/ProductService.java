@@ -12,7 +12,7 @@ import com.nguyeen.springlinhtinh.mapper.ProductMapper;
 import com.nguyeen.springlinhtinh.repository.CategoryRepository;
 import com.nguyeen.springlinhtinh.repository.ProductImageRepository;
 import com.nguyeen.springlinhtinh.repository.ProductRepository;
-import com.nguyeen.springlinhtinh.repository.UserRepository;
+import com.nguyeen.springlinhtinh.repository.AuthenRepository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

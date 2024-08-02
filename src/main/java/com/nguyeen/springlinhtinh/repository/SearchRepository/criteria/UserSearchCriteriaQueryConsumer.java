@@ -1,4 +1,4 @@
-package com.nguyeen.springlinhtinh.repository.SearchRepository;
+package com.nguyeen.springlinhtinh.repository.SearchRepository.criteria;
 
 import com.nguyeen.springlinhtinh.enums.UserStatus;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -15,22 +15,26 @@ import java.util.function.Consumer;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class UserSearchCriteriaQueryConsumer implements Consumer<SearchCriteria> {
+    //Consumer nhận một đối tượng kiểu T và thực hiện một hành động với đối tượng đó mà không trả về giá trị
 
     private CriteriaBuilder builder;
-    private Predicate predicate;
+    private Predicate predicate;//điều kiện
     private Root root;
 
     @Override
-    public void accept(SearchCriteria param) {
+    public void accept(SearchCriteria param) {//key:operation:value
         if(param.getOperation().equals(">")) {
+            //predicate = where key > value (kiểu số)
+            //builder.and() -> kết hợp nhiều điều kiện lại với nhau
             predicate = builder.and(predicate, builder.greaterThanOrEqualTo(root.get(param.getKey()), param.getValue().toString()));
         } else if(param.getOperation().equals("<")) {
             predicate = builder.and(predicate, builder.lessThanOrEqualTo(root.get(param.getKey()), param.getValue().toString()));
-        } else if(param.getOperation().equals(":")) {
+        } else if(param.getOperation().equals(":")) {//kiểu string
             if(root.get(param.getKey()).getJavaType() == String.class) {
                 predicate = builder.and(predicate, builder.like(root.get(param.getKey()), "%" + param.getValue() + "%"));
-            } else if(root.get(param.getKey()).getJavaType() == UserStatus.class) {
+            } else if(root.get(param.getKey()).getJavaType() == UserStatus.class) {//kiểu enum
                 UserStatus status = UserStatus.valueOf(param.getValue().toString().toUpperCase());
                 predicate = builder.and(predicate, builder.equal(root.get(param.getKey()), status));
             } else {

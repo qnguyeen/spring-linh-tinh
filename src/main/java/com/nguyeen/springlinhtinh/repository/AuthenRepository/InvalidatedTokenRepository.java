@@ -1,4 +1,4 @@
-package com.nguyeen.springlinhtinh.repository;
+package com.nguyeen.springlinhtinh.repository.AuthenRepository;
 
 import com.nguyeen.springlinhtinh.entity.InvalidatedToken;
 import org.springframework.data.jpa.repository.JpaRepository;

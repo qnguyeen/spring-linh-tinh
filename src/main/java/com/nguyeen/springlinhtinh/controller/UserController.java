@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/searchs")
+    @GetMapping("/criteria-search")
     ApiResponse<PageResponse<UserResponse>> advancedSearchByCriteria(@RequestParam(defaultValue = "0",required = false) int page,
                                                                               @Min(2)@RequestParam(defaultValue = "3",required = false) int size,
                                                                               @RequestParam(required = false) String sortBy,
@@ -62,6 +63,16 @@ public class UserController {
     ){
         return ApiResponse.<PageResponse<UserResponse>>builder()
                 .result(userService.advancedSearchByCriteria(page, size,sortBy, address,search))
+                .build();
+    }
+
+    @GetMapping("/advanced-search")
+    ApiResponse<PageResponse<UserResponse>> advanceSearchWithSpecifications(Pageable pageable,
+                                                                            @RequestParam(required = false) String[] user,
+                                                                            @RequestParam(required = false) String[] address
+    ){
+        return ApiResponse.<PageResponse<UserResponse>>builder()
+                .result(userService.advanceSearchWithSpecifications(pageable, user, address))
                 .build();
     }
 

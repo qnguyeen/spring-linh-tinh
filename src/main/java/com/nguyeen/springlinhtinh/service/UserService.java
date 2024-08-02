@@ -10,14 +10,15 @@ import com.nguyeen.springlinhtinh.entity.User;
 import com.nguyeen.springlinhtinh.exception.AppException;
 import com.nguyeen.springlinhtinh.exception.ErrorCode;
 import com.nguyeen.springlinhtinh.mapper.UserMapper;
-import com.nguyeen.springlinhtinh.repository.RoleRepository;
+import com.nguyeen.springlinhtinh.repository.AuthenRepository.RoleRepository;
 import com.nguyeen.springlinhtinh.repository.SearchRepository.SearchRepository;
-import com.nguyeen.springlinhtinh.repository.UserRepository;
+import com.nguyeen.springlinhtinh.repository.AuthenRepository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -197,6 +198,24 @@ public class  UserService {
         return PageResponse.<UserResponse>builder()
                 .page(users.getNumber())
                 .size(users.getSize())
+                .total(users.getTotalPages())
+                .items(users.stream().map(userMapper::toUserResponse).toList())
+                .build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public PageResponse<UserResponse> advanceSearchWithSpecifications(Pageable pageable, String[] user, String[] address) {
+        if(user != null && address != null){//join address
+
+        }else if (user != null && address == null){
+            //Specification<User> spec = Specification.where(((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("username"), "%T%")));
+            //select * from user where root.get() = query -> (criteriaBuilder build query)
+        }
+
+        Page<User> users = userRepository.findAll(pageable);
+        return PageResponse.<UserResponse>builder()
+                .page(pageable.getPageNumber())
+                .size(pageable.getPageSize())
                 .total(users.getTotalPages())
                 .items(users.stream().map(userMapper::toUserResponse).toList())
                 .build();

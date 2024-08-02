@@ -1,4 +1,4 @@
-package com.nguyeen.springlinhtinh.repository.SearchRepository;
+package com.nguyeen.springlinhtinh.repository.SearchRepository.criteria;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

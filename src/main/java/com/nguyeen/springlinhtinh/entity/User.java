@@ -82,4 +82,5 @@ public class User extends BaseEntity implements Serializable {
 
     @ManyToMany
     Set<Role> roles;
+
 }

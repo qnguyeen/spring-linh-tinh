@@ -5,7 +5,7 @@ import com.nguyeen.springlinhtinh.dto.request.User.PermissionRequest;
 import com.nguyeen.springlinhtinh.dto.response.User.PermissionResponse;
 import com.nguyeen.springlinhtinh.entity.Permission;
 import com.nguyeen.springlinhtinh.mapper.PermissionMapper;
-import com.nguyeen.springlinhtinh.repository.PermissionRepository;
+import com.nguyeen.springlinhtinh.repository.AuthenRepository.PermissionRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

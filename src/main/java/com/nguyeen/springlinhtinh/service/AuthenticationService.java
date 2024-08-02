@@ -10,20 +10,18 @@ import com.nguyeen.springlinhtinh.entity.InvalidatedToken;
 import com.nguyeen.springlinhtinh.entity.User;
 import com.nguyeen.springlinhtinh.exception.AppException;
 import com.nguyeen.springlinhtinh.exception.ErrorCode;
-import com.nguyeen.springlinhtinh.repository.InvalidatedTokenRepository;
-import com.nguyeen.springlinhtinh.repository.UserRepository;
+import com.nguyeen.springlinhtinh.repository.AuthenRepository.InvalidatedTokenRepository;
+import com.nguyeen.springlinhtinh.repository.AuthenRepository.UserRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +34,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
